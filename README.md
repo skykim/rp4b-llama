@@ -8,9 +8,9 @@ LLaMA on Raspberry Pi 4B
 
 ## Setup
 
-1. Setup Miniforge
+### 1. Setup Miniforge
 
-- Target Path: ~/miniforge3
+- Install miniforge3 aarch64 (arm64)
 
 ```
 cd ~/Downloads/
@@ -32,8 +32,49 @@ source ~/miniforge3/etc/profile.d/conda.sh
 sudo reboot
 ```
 
-- Create new conda environment
+- Create new conda environment (I named it, sky)
 ```
 conda create -n sky
 conda activate sky
 ```
+
+### 2. Setup PyLLaMA
+
+- Install PyLLaMA and dependencies
+```
+pip install pyllama -U
+pip install transformers
+```
+
+- If you get the error "ImportError: cannot import name 'ParamSpec' from 'typing_extensions'"
+```
+pip uninstall typing_extensions
+pip uninstall fastapi
+pip install --no-cache fastapi
+```
+
+- Clone a pyllama git repository (e.g., ~/Desktop/Playground/)
+```
+git clone https://github.com/juncongmoo/pyllama.git
+```
+
+- Download LLaMA 7B model (models: 7B/13B/30B/65B)
+```
+cd pyllama
+python -m llama.download --model_size 7B
+```
+
+- (optional) To run on a Raspberry Pi 4GB model, you must follow [quantization process](https://github.com/juncongmoo/pyllama#-quantize-llama-to-run-in-a-4gb-gpu)
+
+### 3. Inference
+
+- Run inference.py
+
+```
+python inference.py --ckpt_dir ./pyllama_data/7B --tokenizer_path ./pyllama_data/tokenizer.model
+```
+
+## Reference
+
+- [Miniforge](https://github.com/conda-forge/miniforge/)
+- [PyLLaMA](https://github.com/juncongmoo/pyllama)
